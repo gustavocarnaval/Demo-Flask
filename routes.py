@@ -7,7 +7,7 @@ app = Flask("Demo_Carnaval")
 
 @app.route("/olamundo", methods=["GET"])
 def olaMundo():
-    return{"ola": "mundo"}
+    return{"ola": "mundo2"}
 
 
 @app.route("/cadastra/usuario", methods=["POST"])
