@@ -4,6 +4,9 @@ from types import TracebackType
 from typing import IO, Any, AnyStr, Callable, Generic, Mapping, Optional, Sequence, Tuple, Type, TypeVar, Union, overload
 from typing_extensions import Literal
 
+if sys.version_info >= (3, 9):
+    from types import GenericAlias
+
 # We prefer to annotate inputs to methods (eg subprocess.check_call) with these
 # union types.
 # For outputs we use laborious literal based overloads to try to determine
@@ -38,6 +41,8 @@ class CompletedProcess(Generic[_T]):
     stderr: _T
     def __init__(self, args: _CMD, returncode: int, stdout: Optional[_T] = ..., stderr: Optional[_T] = ...) -> None: ...
     def check_returncode(self) -> None: ...
+    if sys.version_info >= (3, 9):
+        def __class_getitem__(cls, item: Any) -> GenericAlias: ...
 
 if sys.version_info >= (3, 7):
     # Nearly the same args as for 3.6, except for capture_output and text
@@ -45,7 +50,7 @@ if sys.version_info >= (3, 7):
     def run(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stdout: _FILE = ...,
         stderr: _FILE = ...,
@@ -73,7 +78,7 @@ if sys.version_info >= (3, 7):
     def run(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stdout: _FILE = ...,
         stderr: _FILE = ...,
@@ -101,7 +106,7 @@ if sys.version_info >= (3, 7):
     def run(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stdout: _FILE = ...,
         stderr: _FILE = ...,
@@ -129,7 +134,7 @@ if sys.version_info >= (3, 7):
     def run(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stdout: _FILE = ...,
         stderr: _FILE = ...,
@@ -158,7 +163,7 @@ if sys.version_info >= (3, 7):
     def run(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stdout: _FILE = ...,
         stderr: _FILE = ...,
@@ -186,7 +191,7 @@ if sys.version_info >= (3, 7):
     def run(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stdout: _FILE = ...,
         stderr: _FILE = ...,
@@ -211,13 +216,13 @@ if sys.version_info >= (3, 7):
         timeout: Optional[float] = ...,
     ) -> CompletedProcess[Any]: ...
 
-elif sys.version_info >= (3, 6):
+else:
     # Nearly same args as Popen.__init__ except for timeout, input, and check
     @overload
     def run(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stdout: _FILE = ...,
         stderr: _FILE = ...,
@@ -243,7 +248,7 @@ elif sys.version_info >= (3, 6):
     def run(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stdout: _FILE = ...,
         stderr: _FILE = ...,
@@ -269,7 +274,7 @@ elif sys.version_info >= (3, 6):
     def run(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stdout: _FILE = ...,
         stderr: _FILE = ...,
@@ -296,7 +301,7 @@ elif sys.version_info >= (3, 6):
     def run(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stdout: _FILE = ...,
         stderr: _FILE = ...,
@@ -322,7 +327,7 @@ elif sys.version_info >= (3, 6):
     def run(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stdout: _FILE = ...,
         stderr: _FILE = ...,
@@ -345,87 +350,11 @@ elif sys.version_info >= (3, 6):
         timeout: Optional[float] = ...,
     ) -> CompletedProcess[Any]: ...
 
-else:
-    # Nearly same args as Popen.__init__ except for timeout, input, and check
-    @overload
-    def run(
-        args: _CMD,
-        bufsize: int = ...,
-        executable: AnyPath = ...,
-        stdin: _FILE = ...,
-        stdout: _FILE = ...,
-        stderr: _FILE = ...,
-        preexec_fn: Callable[[], Any] = ...,
-        close_fds: bool = ...,
-        shell: bool = ...,
-        cwd: Optional[AnyPath] = ...,
-        env: Optional[_ENV] = ...,
-        *,
-        universal_newlines: Literal[True],
-        startupinfo: Any = ...,
-        creationflags: int = ...,
-        restore_signals: bool = ...,
-        start_new_session: bool = ...,
-        pass_fds: Any = ...,
-        # where the *real* keyword only args start
-        check: bool = ...,
-        input: Optional[str] = ...,
-        timeout: Optional[float] = ...,
-    ) -> CompletedProcess[str]: ...
-    @overload
-    def run(
-        args: _CMD,
-        bufsize: int = ...,
-        executable: AnyPath = ...,
-        stdin: _FILE = ...,
-        stdout: _FILE = ...,
-        stderr: _FILE = ...,
-        preexec_fn: Callable[[], Any] = ...,
-        close_fds: bool = ...,
-        shell: bool = ...,
-        cwd: Optional[AnyPath] = ...,
-        env: Optional[_ENV] = ...,
-        universal_newlines: Literal[False] = ...,
-        startupinfo: Any = ...,
-        creationflags: int = ...,
-        restore_signals: bool = ...,
-        start_new_session: bool = ...,
-        pass_fds: Any = ...,
-        *,
-        check: bool = ...,
-        input: Optional[bytes] = ...,
-        timeout: Optional[float] = ...,
-    ) -> CompletedProcess[bytes]: ...
-    @overload
-    def run(
-        args: _CMD,
-        bufsize: int = ...,
-        executable: AnyPath = ...,
-        stdin: _FILE = ...,
-        stdout: _FILE = ...,
-        stderr: _FILE = ...,
-        preexec_fn: Callable[[], Any] = ...,
-        close_fds: bool = ...,
-        shell: bool = ...,
-        cwd: Optional[AnyPath] = ...,
-        env: Optional[_ENV] = ...,
-        universal_newlines: bool = ...,
-        startupinfo: Any = ...,
-        creationflags: int = ...,
-        restore_signals: bool = ...,
-        start_new_session: bool = ...,
-        pass_fds: Any = ...,
-        *,
-        check: bool = ...,
-        input: Optional[_TXT] = ...,
-        timeout: Optional[float] = ...,
-    ) -> CompletedProcess[Any]: ...
-
 # Same args as Popen.__init__
 def call(
     args: _CMD,
     bufsize: int = ...,
-    executable: AnyPath = ...,
+    executable: Optional[AnyPath] = ...,
     stdin: _FILE = ...,
     stdout: _FILE = ...,
     stderr: _FILE = ...,
@@ -472,7 +401,7 @@ if sys.version_info >= (3, 7):
     def check_output(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stderr: _FILE = ...,
         preexec_fn: Callable[[], Any] = ...,
@@ -497,7 +426,7 @@ if sys.version_info >= (3, 7):
     def check_output(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stderr: _FILE = ...,
         preexec_fn: Callable[[], Any] = ...,
@@ -522,7 +451,7 @@ if sys.version_info >= (3, 7):
     def check_output(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stderr: _FILE = ...,
         preexec_fn: Callable[[], Any] = ...,
@@ -547,7 +476,7 @@ if sys.version_info >= (3, 7):
     def check_output(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stderr: _FILE = ...,
         preexec_fn: Callable[[], Any] = ...,
@@ -573,7 +502,7 @@ if sys.version_info >= (3, 7):
     def check_output(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stderr: _FILE = ...,
         preexec_fn: Callable[[], Any] = ...,
@@ -598,7 +527,7 @@ if sys.version_info >= (3, 7):
     def check_output(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stderr: _FILE = ...,
         preexec_fn: Callable[[], Any] = ...,
@@ -620,13 +549,12 @@ if sys.version_info >= (3, 7):
         text: Optional[bool] = ...,
     ) -> Any: ...  # morally: -> _TXT
 
-elif sys.version_info >= (3, 6):
-    # 3.6 added encoding and errors
+else:
     @overload
     def check_output(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stderr: _FILE = ...,
         preexec_fn: Callable[[], Any] = ...,
@@ -650,7 +578,7 @@ elif sys.version_info >= (3, 6):
     def check_output(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stderr: _FILE = ...,
         preexec_fn: Callable[[], Any] = ...,
@@ -674,7 +602,7 @@ elif sys.version_info >= (3, 6):
     def check_output(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stderr: _FILE = ...,
         preexec_fn: Callable[[], Any] = ...,
@@ -698,7 +626,7 @@ elif sys.version_info >= (3, 6):
     def check_output(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stderr: _FILE = ...,
         preexec_fn: Callable[[], Any] = ...,
@@ -722,7 +650,7 @@ elif sys.version_info >= (3, 6):
     def check_output(
         args: _CMD,
         bufsize: int = ...,
-        executable: AnyPath = ...,
+        executable: Optional[AnyPath] = ...,
         stdin: _FILE = ...,
         stderr: _FILE = ...,
         preexec_fn: Callable[[], Any] = ...,
@@ -741,74 +669,6 @@ elif sys.version_info >= (3, 6):
         input: _TXT = ...,
         encoding: Optional[str] = ...,
         errors: Optional[str] = ...,
-    ) -> Any: ...  # morally: -> _TXT
-
-else:
-    @overload
-    def check_output(
-        args: _CMD,
-        bufsize: int = ...,
-        executable: AnyPath = ...,
-        stdin: _FILE = ...,
-        stderr: _FILE = ...,
-        preexec_fn: Callable[[], Any] = ...,
-        close_fds: bool = ...,
-        shell: bool = ...,
-        cwd: Optional[AnyPath] = ...,
-        env: Optional[_ENV] = ...,
-        startupinfo: Any = ...,
-        creationflags: int = ...,
-        restore_signals: bool = ...,
-        start_new_session: bool = ...,
-        pass_fds: Any = ...,
-        input: _TXT = ...,
-        *,
-        timeout: Optional[float] = ...,
-        universal_newlines: Literal[True],
-    ) -> str: ...
-    @overload
-    def check_output(
-        args: _CMD,
-        bufsize: int = ...,
-        executable: AnyPath = ...,
-        stdin: _FILE = ...,
-        stderr: _FILE = ...,
-        preexec_fn: Callable[[], Any] = ...,
-        close_fds: bool = ...,
-        shell: bool = ...,
-        cwd: Optional[AnyPath] = ...,
-        env: Optional[_ENV] = ...,
-        universal_newlines: Literal[False] = ...,
-        startupinfo: Any = ...,
-        creationflags: int = ...,
-        restore_signals: bool = ...,
-        start_new_session: bool = ...,
-        pass_fds: Any = ...,
-        input: _TXT = ...,
-        *,
-        timeout: Optional[float] = ...,
-    ) -> bytes: ...
-    @overload
-    def check_output(
-        args: _CMD,
-        bufsize: int = ...,
-        executable: AnyPath = ...,
-        stdin: _FILE = ...,
-        stderr: _FILE = ...,
-        preexec_fn: Callable[[], Any] = ...,
-        close_fds: bool = ...,
-        shell: bool = ...,
-        cwd: Optional[AnyPath] = ...,
-        env: Optional[_ENV] = ...,
-        universal_newlines: bool = ...,
-        startupinfo: Any = ...,
-        creationflags: int = ...,
-        restore_signals: bool = ...,
-        start_new_session: bool = ...,
-        pass_fds: Any = ...,
-        input: _TXT = ...,
-        *,
-        timeout: Optional[float] = ...,
     ) -> Any: ...  # morally: -> _TXT
 
 PIPE: int
@@ -1004,7 +864,7 @@ class Popen(Generic[AnyStr]):
             encoding: Optional[str] = ...,
             errors: Optional[str] = ...,
         ) -> Popen[Any]: ...
-    elif sys.version_info >= (3, 6):
+    else:
         @overload
         def __new__(
             cls,
@@ -1126,72 +986,6 @@ class Popen(Generic[AnyStr]):
             encoding: Optional[str] = ...,
             errors: Optional[str] = ...,
         ) -> Popen[Any]: ...
-    else:
-        @overload
-        def __new__(
-            cls,
-            args: _CMD,
-            bufsize: int = ...,
-            executable: Optional[AnyPath] = ...,
-            stdin: Optional[_FILE] = ...,
-            stdout: Optional[_FILE] = ...,
-            stderr: Optional[_FILE] = ...,
-            preexec_fn: Optional[Callable[[], Any]] = ...,
-            close_fds: bool = ...,
-            shell: bool = ...,
-            cwd: Optional[AnyPath] = ...,
-            env: Optional[_ENV] = ...,
-            *,
-            universal_newlines: Literal[True],
-            startupinfo: Optional[Any] = ...,
-            creationflags: int = ...,
-            restore_signals: bool = ...,
-            start_new_session: bool = ...,
-            pass_fds: Any = ...,
-        ) -> Popen[str]: ...
-        @overload
-        def __new__(
-            cls,
-            args: _CMD,
-            bufsize: int = ...,
-            executable: Optional[AnyPath] = ...,
-            stdin: Optional[_FILE] = ...,
-            stdout: Optional[_FILE] = ...,
-            stderr: Optional[_FILE] = ...,
-            preexec_fn: Optional[Callable[[], Any]] = ...,
-            close_fds: bool = ...,
-            shell: bool = ...,
-            cwd: Optional[AnyPath] = ...,
-            env: Optional[_ENV] = ...,
-            *,
-            universal_newlines: Literal[False] = ...,
-            startupinfo: Optional[Any] = ...,
-            creationflags: int = ...,
-            restore_signals: bool = ...,
-            start_new_session: bool = ...,
-            pass_fds: Any = ...,
-        ) -> Popen[bytes]: ...
-        @overload
-        def __new__(
-            cls,
-            args: _CMD,
-            bufsize: int = ...,
-            executable: Optional[AnyPath] = ...,
-            stdin: Optional[_FILE] = ...,
-            stdout: Optional[_FILE] = ...,
-            stderr: Optional[_FILE] = ...,
-            preexec_fn: Optional[Callable[[], Any]] = ...,
-            close_fds: bool = ...,
-            shell: bool = ...,
-            cwd: Optional[AnyPath] = ...,
-            env: Optional[_ENV] = ...,
-            universal_newlines: bool = ...,
-            startupinfo: Optional[Any] = ...,
-            creationflags: int = ...,
-            restore_signals: bool = ...,
-            start_new_session: bool = ...,
-            pass_fds: Any = ...,
-        ) -> Popen[Any]: ...
     def poll(self) -> Optional[int]: ...
     if sys.version_info >= (3, 7):
         def wait(self, timeout: Optional[float] = ...) -> int: ...
@@ -1211,6 +1005,8 @@ class Popen(Generic[AnyStr]):
     def __exit__(
         self, type: Optional[Type[BaseException]], value: Optional[BaseException], traceback: Optional[TracebackType]
     ) -> None: ...
+    if sys.version_info >= (3, 9):
+        def __class_getitem__(cls, item: Any) -> GenericAlias: ...
 
 # The result really is always a str.
 def getstatusoutput(cmd: _TXT) -> Tuple[int, str]: ...

@@ -1,0 +1,20 @@
+[
+    {
+      "ID": 1,
+      "Login": "gustavo",
+      "Pass": "5f4dcc3b5aa765d61d8327deb882cf99",
+      "CRDate": "2021-02-10 14:51:09",
+      "LastLogin": "2021-02-18 10:37:42",
+      "Status": 1,
+      "AppVersion": "1.0"
+    },
+    {
+      "ID": 2,
+      "Login": "carnaval",
+      "Pass": "5f4dcc3b5aa765d61d8327deb882cf99",
+      "CRDate": "2021-02-10 14:51:09",
+      "LastLogin": "2021-02-18 10:37:42",
+      "Status": 1,
+      "AppVersion": "1.0"
+    }
+]

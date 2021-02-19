@@ -1,4 +1,4 @@
-#!C:\Users\gusta\Documents\Desenvolvimento\Flask\venv_flask\Scripts\python.exe
+#!/usr/bin/env python3
 """Mypyc command-line tool.
 
 Usage:
