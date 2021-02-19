@@ -140,6 +140,7 @@ teste.py
 *config.py
 
 #VsCode
+.vscode/
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
