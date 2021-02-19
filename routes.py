@@ -4,24 +4,30 @@ import json
 import jwt
 from main import insertusuario, listusuario, check_login, check_password_hash
 from functools import wraps
+import config as cfg
 
 app = Flask("Demo_API_JWT")
-app.config['SECRET_KEY'] = 'thisisthesecretkey'
-app.config['JSON_AS_ASCII'] = False
+app.config['SECRET_KEY'] = cfg.SECRET_KEY
+app.config['JSON_AS_ASCII'] = cfg.JSON_AS_ASCII
 
 
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        # http://127.0.0.1:5000/route?token=aslasdjasd
+        # Token na rota: http://127.0.0.1:5000/route?token=aslasdjasd
         # token = request.args.get('token')
+        
         # Token no header
-        token = request.headers['x-access-tokens']
+        #token = request.headers['x-access-tokens']
 
-        if not token:
+        # Token bearer
+        bearer = request.headers.get('Authorization')    # Bearer YourTokenHere
+        
+        if not bearer:
             return jsonify({'message': 'Token is missing!'}), 401
 
         try:
+            token = bearer.split()[1]  # YourTokenHere
             data = jwt.decode(
                 token, app.config['SECRET_KEY'], algorithms=["HS256"])
         except:
@@ -90,40 +96,53 @@ def login():
                                  {'WWW.Authentication': 'Basic realm: "Login não encontrado ou multiplos Logins"'})
 
 
-@ app.route("/listausuario", methods=["GET"])
+@ app.route("/usuario/quantidade", methods=["GET"])
+@ token_required
+def quantifica_usuario():
+    lt = listusuario(False,False,False)
+    return jsonify(len(lt))
+
+
+@ app.route("/usuario", methods=["GET"])
 @ token_required
 def lista_usuario():
-    lt = listusuario()
+    inicio = request.args.get('inicio')
+    quantidade = request.args.get('quantidade')
+    ident = request.args.get('id')
+    if not ident:
+        if not inicio:
+            inicio = 1
+        else:
+            inicio = int(inicio)
+        if not quantidade:
+            quantidade = 300
+        else:
+            quantidade = int(quantidade)
+        fim = inicio + quantidade - 1
+        lt = listusuario(False,inicio,fim)
+    else:
+        ident = int(ident)
+        lt = listusuario(ident,False,False)
     return jsonify(lt)
 
 
-@ app.route("/cadastra/usuario", methods=["POST"])
+@ app.route("/usuario", methods=["POST"])
+@ token_required
 def cadastra_usuario():
     body = request.get_json()
 
     if("nome" not in body):
-        return geraResponse(400, "O parametro nome é obrigatorio")
+        return make_response('O parametro nome é obrigatorio', 400) 
 
     if("email" not in body):
-        return geraResponse(400, "O parametro email é obrigatorio")
+        return make_response('O parametro email é obrigatorio', 400)
 
     if("senha" not in body):
-        return geraResponse(400, "O parametro senha é obrigatorio")
+        return make_response('O parametro senha é obrigatorio', 400)
 
     usuario = insertusuario(body["nome"], body["email"], body["senha"])
-
-    return geraResponse(200, "Usuario Criado", "user", usuario)
-
-
-def geraResponse(status, mensagem, nome_do_conteudo=False, conteudo=False):
-    response = {}
-    response["status"] = status
-    response["mensagem"] = mensagem
-
-    if(nome_do_conteudo and conteudo):
-        response[nome_do_conteudo] = conteudo
-
-    return response
+    retorno = dict(status=200, mensagem='Usuário Criado com Sucesso', user=usuario)
+    return jsonify(retorno)
 
 
 app.run()
