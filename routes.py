@@ -118,6 +118,8 @@ def lista_usuario():
             quantidade = 300
         else:
             quantidade = int(quantidade)
+            if quantidade > 300:
+                quantidade = 300
         fim = inicio + quantidade - 1
         lt = listusuario(False,inicio,fim)
     else:
