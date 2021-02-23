@@ -83,3 +83,13 @@ sudo certbot --nginx -d api.domain.com
 
 12. Testar Rota da API com CURL
 curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:7000/olamundo
+
+13. Habilitar renovação automática dos Certificados SSL:
+crontab -e
+[escolher editor nano]
+[adicionar ao final do arquivo]:
+[
+#Fazer renovacao automatica dos certificados SSL
+0 5 * * * /usr/bin/certbot renew --quiet
+]
+[salvar]
