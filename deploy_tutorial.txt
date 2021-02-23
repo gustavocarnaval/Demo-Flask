@@ -4,6 +4,7 @@ Preparar sistema (Ubuntu)
 timedatectl
 
 2. Selecionar novo fuso horário
+[usar Americas > Sao Paulo]
 sudo dpkg-reconfigure tzdata
 sudo /etc/init.d/cron restart
 
@@ -23,7 +24,7 @@ sudo nano /etc/fstab
 /swapfile swap swap defaults 0 0
 ]
 sudo reboot
-[Verificar se swap entrou]:
+[Verificar se swap entrou nas barrinhas da parte de cima]:
 htop
 
 5. GIT
