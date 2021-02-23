@@ -40,7 +40,7 @@ def token_required(f):
 
 @app.route("/olamundo", methods=["GET"])
 def olaMundo():
-    return{"ola": "mundo"}
+    return{"ola": "mundo2"}
 
 
 @app.route("/login", methods=["GET"])
@@ -147,4 +147,4 @@ def cadastra_usuario():
     return jsonify(retorno)
 
 
-app.run()
+#app.run()
