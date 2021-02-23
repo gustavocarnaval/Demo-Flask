@@ -147,3 +147,6 @@ teste.py
 !.vscode/launch.json
 !.vscode/extensions.json
 *.code-workspace
+
+#Flask Monitoring
+flask_monitoringdashboard.db

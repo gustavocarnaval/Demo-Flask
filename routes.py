@@ -5,11 +5,12 @@ import jwt
 from main import insertusuario, listusuario, check_login, check_password_hash
 from functools import wraps
 import config as cfg
+import flask_monitoringdashboard as dashboard
 
 app = Flask("Demo_API_JWT")
 app.config['SECRET_KEY'] = cfg.SECRET_KEY
 app.config['JSON_AS_ASCII'] = cfg.JSON_AS_ASCII
-
+dashboard.bind(app)
 
 def token_required(f):
     @wraps(f)

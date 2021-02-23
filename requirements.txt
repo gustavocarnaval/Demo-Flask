@@ -2,3 +2,4 @@ Flask
 datetime 
 PyJWT
 gunicorn
+flask_monitoringdashboard
