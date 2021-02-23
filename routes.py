@@ -40,7 +40,7 @@ def token_required(f):
 
 @app.route("/olamundo", methods=["GET"])
 def olaMundo():
-    return{"ola": "mundo2"}
+    return{"ola": "mundo novo"}
 
 
 @app.route("/login", methods=["GET"])
