@@ -77,6 +77,8 @@ sudo service nginx restart
 
 11. Instalar Certificado SSL
 sudo certbot --nginx -d api.domain.com
+[pedir pra redirecionar o tráfego https para o http]
+[conferir arquivo do nginx]
 
 12. Testar Rota da API com CURL
 curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:7000/olamundo
