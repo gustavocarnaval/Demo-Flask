@@ -48,7 +48,7 @@ pip install -r requirements.txt
 7. Iniciar WSGI Gunicorn
 [não pode estar com app.run() ao final do arquivo py]
 [no -w, usar a quantidade de workers: vcpu da máquina x 2]
-sudo gunicorn -w 4 -b 0.0.0.0:7000 ARQUIVOPY:NOMEDOAPP
+gunicorn -w 4 -b 0.0.0.0:7000 ARQUIVOPY:NOMEDOAPP
 [abrir outra janela/conexão ao servidor]
 
 8. Instalar NGINX
