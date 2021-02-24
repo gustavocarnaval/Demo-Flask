@@ -38,6 +38,11 @@ def token_required(f):
 
     return decorated
 
+@app.route("/", methods=["GET"])
+@ token_required
+def rootbasic():
+    return{"sucesso": "access success"}
+
 
 @app.route("/olamundo", methods=["GET"])
 def olaMundo():

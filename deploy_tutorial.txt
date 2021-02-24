@@ -40,7 +40,12 @@ cd /home/user/desenvolvimento
 git clone GIT_URL
 
 6. Virtual Environment
-apt-get install -y python3-venv
+sudo apt install -y python3-pip
+[instalar requirements do projeto]
+pip3 install -r requirements.txt
+sudo apt-get install -y gunicorn
+sudo apt-get install -y python3-venv
+sudo apt-get install -y python3-dev
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt

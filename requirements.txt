@@ -1,5 +1,6 @@
 Flask  
 datetime 
 PyJWT
+json
 gunicorn
 flask_monitoringdashboard
