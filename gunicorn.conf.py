@@ -9,4 +9,4 @@ errorlog = "/var/log/gunicorn/gunicorn.error.log"
 # Whether to send Nginx output to the error log 
 capture_output = True
 # How verbose the Gunicorn error logs should be 
-#loglevel = "DEBUG"
+loglevel = "DEBUG"
