@@ -62,7 +62,7 @@ sudo apt install nginx
 9. Instalar Certbot para o Certificado SSL
 [fazer o apontamento de DNS antes]
 sudo add-apt-repository ppa:certbot/certbot
-sudo apt-get install python-certbot-nginx
+sudo apt-get install python3-certbot-nginx
 sudo apt-get install letsencrypt
 
 10. Configurar o NGINX
